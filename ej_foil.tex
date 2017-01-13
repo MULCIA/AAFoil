@@ -1,0 +1,174 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage{shortvrb,amssymb}
+\usepackage[dvips]{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref} 
+
+
+
+\MakeShortVerb{\§}
+
+\textwidth 14.8cm
+\textheight 25cm
+\oddsidemargin 5mm
+\topmargin -15mm
+\pagestyle{empty}
+
+\newcounter{ejercicio}
+
+\newenvironment{ejercicio}{%
+  {\addtocounter{ejercicio}{1} \noindent {\bf Ejercicio \theejercicio. }}}
+  {\vspace{3mm}}
+
+\newenvironment{solucion}{%
+  {\dotfill \newline \bf Solución \temai.\theejercicio.\ \  }}
+  {\dotfill \vspace{5mm}}
+
+\begin{document}
+{\large {\sc \noindent Máster Universitario en \\ Lógica, Computación e
+    Inteligencia Artificial} \\
+Aprendizaje Automático
+\vspace{3mm}\hrule}
+\vspace{3mm}
+\noindent {\bf Apellidos:}\dotfill \vspace{2mm}\\
+{\bf Nombre :}\dotfill \vspace{2mm}
+\hrule
+\vspace{5mm}
+Vamos a realizar ejercicios de Programación Lógica inductiva con FOIL, para ello:
+
+\begin{itemize}
+\item Descarga e instala SWI-Prolog \url{http://www.swi-prolog.org/}
+\item En el directorio, además de {\tt foil.pl}, tenéis disponible {\tt mi\_foil.pl} con pequeñas modificaciones sobre la información al usuario.
+\item El fichero original de {\tt foil.pl} está disponible en la web, p.e.,\newline 
+\url{http://www.eecs.wsu.edu/~holder/courses/ai2pro/code/learning/foil.pl}
+\end{itemize}
+
+Empezamos lanzando Prolog
+
+\begin{verbatim}
+======================================================
+naranjo@torcal:~$ prolog
+Welcome to SWI-Prolog (Multi-threaded, 64 bits, Version 5.10.4)
+Copyright (c) 1990-2011 University of Amsterdam, VU Amsterdam
+SWI-Prolog comes with ABSOLUTELY NO WARRANTY. This is free software,
+and you are welcome to redistribute it under certain conditions.
+Please visit http://www.swi-prolog.org for details.
+
+For help, use ?- help(Topic). or ?- apropos(Word).
+
+?-
+======================================================
+\end{verbatim}
+
+A continuación, cargamos {\tt mi\_foil.pl} o {\tt foil.pl}. 
+
+\begin{verbatim}
+======================================================
+?- [mi_foil].
+Load an example data file: [filename]
+Start Foil               : foil(Predicate/Arity)
+Start Foil measure time  : foil_time(Predicate/Arity)
+% mi_foil compiled 0.01 sec, 45,576 bytes
+true.
+======================================================
+\end{verbatim}
+
+A continuación, cargamos el fichero con el problema de aprendizaje. En este caso, empezamos con {\tt hija.pl}. Vemos que el fichero contiene cuatro parámetros:
+\begin{itemize}
+\item {\tt foil\_predicates}, donde indicamos la lista de pares {\tt predicado/aridad} que podemos usar en las reglas que construye FOIL.
+\item {\tt foil\_cwa}. CWA son las siglas de {\it Closed World Assumption}, la hipótesis del mundo cerrado. En este parámetro indicamos si la usamos o no.
+\item {\tt foil\_use\_negations}. Indica si queremos que FOIL use o no literales negados en el cuerpo de las reglas.
+\item {\tt foil\_det\_lit\_bound}. Indica el límite de profundidad de la búsqueda de literales determinados. Un literal $L_m$ es {\it determinado} para la cláusula parcial $A \leftarrow L_1,\dots, L_{m-1}$ si $L_m$ contiene nuevas variables que tienen sólo una posible unificación para cada ejemplo positivo.
+\end{itemize}
+
+Si estamos usando {\tt mi\_foil}, además incluimos el parámetro {\tt verbosity(N)}, donde
+\begin{itemize}
+\item {\tt verbosity(0)} Devuelve sólo la ganancia de información
+\item {\tt verbosity(1)} Devuelve el número de ejemplos positivos y negativos cubiertos
+\item {\tt verbosity(2)} Devuelve también la lista de ejemplos positivos y negativos cubiertos.
+\end{itemize}
+
+Si usamos {\tt foil.pl}, tenemos que omitir {\tt verbosity/1} en el fichero de entrada.
+
+El fichero incluye también los ejemplos positivos, negativos y el conocimiento base. Tras cargar {\tt mi\_foil.pl}, cargamos también {\tt hija.pl}
+
+\begin{verbatim}
+?- [hija].
+% hija compiled 0.00 sec, 4,192 bytes
+true.
+\end{verbatim}
+
+Ahora lanzamos {\tt foil}. Para ello debemos decirle el nombre y la aridad del predicado que queremos aprender.
+
+\begin{verbatim}
+?-  foil(hija/2).
+\end{verbatim}
+
+Dependiendo del valor del parámetro {\tt verbosity}, obtenemos más o menos información de la ejecución del algoritmo. Por ejemplo, en este caso, al extender {\tt hija(A,B):- } con {\tt progenitor(B,A)}, obtenemos los siguientes valores.
+
+\begin{verbatim}
+Regla: hija(A, B):-progenitor(B, A)
+Número de ejemplos positivos: 2
+Ejemplos positivos: [[maria, ana], [eva, tomas]]
+Número de ejemplos negativos: 1
+Ejemplos negativos: [[tomas, ana]]
+Número de pos. cubiertos en la cláusula ampliada: 2
+Positivos cubiertos en la cláusula ampliada: [hija(maria, ana), hija(eva, tomas)]
+Ganancia: 1.47393	Regla: hija(A, B):-progenitor(B, A)
+\end{verbatim}
+
+Finalmente, FOIL devuelve la definición de {\tt hija}
+
+\begin{verbatim}
+Definición encontrada:
+hija(B, A) :- progenitor(A, B), mujer(B).
+\end{verbatim}
+
+FOIL también nos puede dar información del tiempo que ha necesitado para aprender, mediante el predicado {\tt foil\_time(Predicado/Aridad)}.
+
+\begin{verbatim}
+?- foil_time(hija/2).
+
+...
+
+Definición encontrada:
+hija(B, A) :- progenitor(A, B), mujer(B).
+
+Run Time = 0.01 sec.
+true.
+\end{verbatim}
+
+\begin{ejercicio}
+Prueba con el predicado {\tt hija.pl} modificando su contenido.
+\begin{itemize}
+\item ¿Qué ocurre si cambiamos el parámetro {\tt verbosity}?
+\item ¿Crees que cambia el tiempo de ejecución si eliminamos {\tt '='/2} de los predicados permitidos? ¿Y si prohibimos el uso de literales negados? ¿Por qué crees eso? Pruébalo.
+\item ¿Y si ponemos más o menos ejemplos?
+\end{itemize}
+\end{ejercicio}
+
+\begin{ejercicio}
+El fichero {\tt ejercicio\_abuelo.pl} contiene ejemplos positivos para este concepto y las definicionoes de {\tt madre/2}, {\tt padre/2} y {\tt progenitor/2}.
+Completa el fichero con los parámetros que faltan para realizar aprendizaje con FOIL usando la hipótesis del mundo cerrado. ¿Qué ocurre si eliminamos la definición de progenitor del conocimiento base? 
+\end{ejercicio}
+
+\begin{ejercicio}
+En el fichero {\tt ejercicio\_grafo.pl} están los ejemplos positivos y el conocimiento base para el problema de aprendizaje del predicado {\it camino} visto en clase. Añade los parámetros necesarios para poder realizar aprendizaje con FOIL usando la hipótesis del mundo cerrado. ¿Es necesario incluir el predicado {\tt camino/2} en el parámetro {\tt foil\_predicates}?
+\end{ejercicio}
+
+\begin{ejercicio}
+Adapta la información de los ficheros {\tt trains.f}, {\tt trains.n}, {\tt trains.b} para poder realizar aprendizaje con FOIL. ¿Se obtiene el mismo resultado? 
+\end{ejercicio}
+
+\begin{ejercicio}
+Escribe el fichero de datos para aprender el predicado {\tt par/1} con FOIL, tomando como ejemplos positivos 0, 2, 4 y 6 y como ejemplos negativos 1, 3 y 5. Usa {\tt es\_cero(0)} entre los predicados del conocimiento base.
+\begin{itemize}
+\item Prueba primero usando como conocimiento base el predicado {\tt menos\_2/2}.
+\item Usa después {\tt menos\_1/2} en el conocimiento base. ¿Es necesario cambiar el parámetro {\tt foil\_det\_lit\_bound}?
+\end{itemize}  
+\end{ejercicio}
+\end{document}
+
+
