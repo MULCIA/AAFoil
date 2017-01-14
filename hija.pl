@@ -5,7 +5,7 @@ foil_det_lit_bound(0).            % Don't add any determinate literals
                                   % In general, this is a depth limit on
                                   %   the search for determinate literals
 
-verbosity(1).
+verbosity(3).
 
 % Ejemplos positivos
 
