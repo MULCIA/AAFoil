@@ -1,3 +1,12 @@
+foil_predicates([camino/2, enlace/2]).
+foil_cwa(true).                   
+foil_use_negations(false).        % Don't use negations of foil_predicates
+foil_det_lit_bound(0).            % Don't add any determinate literals
+                                  % In general, this is a depth limit on
+                                  %   the search for determinate literals
+
+verbosity(2).
+
 % Ejemplos positivos
 
 camino(1,2).
