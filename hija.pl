@@ -15,6 +15,8 @@ hija(eva,tomas).
 % Ejemplos negativos
 
 hija(tomas,ana):-fail.
+hija(eva,ana):- fail.
+hija(eva,ignacio):- fail.
 
 % Conocimiento base
 
