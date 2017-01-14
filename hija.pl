@@ -10,11 +10,11 @@ verbosity(2).
 % Ejemplos positivos
 
 hija(maria,ana).
+hija(eva,tomas).
 
 % Ejemplos negativos
 
 hija(tomas,ana):-fail.
-hija(eva,ana):- fail.
 
 % Conocimiento base
 
