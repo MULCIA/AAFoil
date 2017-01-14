@@ -1,3 +1,12 @@
+foil_predicates([abuelo/2, padre/2, madre/2, progenitor/2]).
+foil_cwa(true).                   
+foil_use_negations(true).        % Don't use negations of foil_predicates
+foil_det_lit_bound(0).            % Don't add any determinate literals
+                                  % In general, this is a depth limit on
+                                  %   the search for determinate literals
+
+verbosity(2).
+
 % Ejemplos positivos
 
 abuelo(felipe,guillermo).
