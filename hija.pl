@@ -1,6 +1,6 @@
-foil_predicates([hija/2, hombre/1, mujer/1, progenitor/2]).
+foil_predicates([hija/2, hombre/1, mujer/1, progenitor/2, '='/2]).
 foil_cwa(false).                   
-foil_use_negations(true).        % Don't use negations of foil_predicates
+foil_use_negations(false).        % Don't use negations of foil_predicates
 foil_det_lit_bound(0).            % Don't add any determinate literals
                                   % In general, this is a depth limit on
                                   %   the search for determinate literals
