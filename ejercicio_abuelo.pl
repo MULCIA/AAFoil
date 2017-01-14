@@ -39,3 +39,6 @@ madre(ana,pedro).
 madre(ana,zara).
 madre(sara,beatriz).
 madre(sara,eugenia).
+
+progenitor(X,Y):- padre(X,Y).
+progenitor(X,Y):- madre(X,Y).
